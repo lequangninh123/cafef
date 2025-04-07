@@ -42,9 +42,20 @@ def crawl_carref_foreign_net():
         df.to_csv("foreign_net_values.csv", index=False)
         return df
         
+         # Ensure data exists before saving
+        if len(data) > 0:
+            df = pd.DataFrame(data, columns=["date", "net_value"])
+            df.to_csv("foreign_net_values.csv", index=False)
+            print("✅ Successfully saved data to CSV")
+            return True
+        else:
+            print("⚠️ No data found to save")
+            return False
+            
     except Exception as e:
-        print(f"Error during crawling: {e}")
-        return None
+        print(f"❌ Crawling failed: {e}")
+        return False
 
 if __name__ == "__main__":
-    crawl_carref_foreign_net()
+    success = crawl_carref_foreign_net()
+    exit(0 if success else 1)  # Exit with error code if failed
